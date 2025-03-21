@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indian Temples Gallery</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f8f8;
+        }
+
+        .search-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        #searchInput {
+            padding: 12px 20px;
+            width: 60%;
+            border: 2px solid #4a148c;
+            border-radius: 30px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            padding: 20px;
+        }
+
+        .temple-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .temple-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .temple-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-bottom: 3px solid #4a148c;
+        }
+
+        .temple-info {
+            padding: 15px;
+        }
+
+        .temple-name {
+            color: #4a148c;
+            margin: 0 0 10px 0;
+            font-size: 1.4em;
+        }
+
+        .temple-deity {
+            color: #ff6f00;
+            margin: 8px 0;
+            font-style: italic;
+        }
+
+        .temple-description {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .no-results {
+            text-align: center;
+            color: #666;
+            font-size: 1.2em;
+            padding: 30px;
+            grid-column: 1 / -1;
+        }
+    </style>
+</head>
+<body>
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search temples by name...">
+    </div>
+    
+    <div class="gallery" id="templeGallery"></div>
+
+<script>
+// Temple data array - Add your images to an 'images' folder
+const temples = [
+    {
+        name: "Konark Sun Temple",
+        images: ["images/konark.jpg"],
+        description: "13th-century CE Sun Temple in Odisha, shaped like a giant chariot",
+        deity: "Surya (Sun God)"
+    },
+    {
+        name: "Golden Temple",
+        images: ["images/golden-temple.jpg"],
+        description: "Glistening Sikh shrine in Amritsar, Punjab",
+        deity: "Guru Granth Sahib"
+    },
+    {
+        name: "Meenakshi Temple",
+        images: ["images/meenakshi.jpg"],
+        description: "Colorful temple complex in Madurai with 14 gateway towers",
+        deity: "Meenakshi (Parvati)"
+    },
+    {
+        name: "Kashi Vishwanath",
+        images: ["images/kashi.jpg"],
+        description: "One of the most sacred Jyotirlingas in Varanasi",
+        deity: "Lord Shiva"
+    },
+    {
+        name: "Tirupati Balaji",
+        images: ["images/tirupati.jpg"],
+        description: "World's richest temple in Andhra Pradesh",
+        deity: "Lord Venkateswara"
+    },
+    {
+        name: "Khajuraho Temples",
+        images: ["images/khajuraho.jpg"],
+        description: "UNESCO site famous for intricate erotic sculptures",
+        deity: "Various Hindu deities"
+    },
+    {
+        name: "Somnath Temple",
+        images: ["images/somnath.jpg"],
+        description: "First among twelve Jyotirlinga shrines of Shiva",
+        deity: "Lord Shiva"
+    }
+];
+
+// Initialize gallery
+function initGallery() {
+    const gallery = document.getElementById('templeGallery');
+    gallery.innerHTML = '';
+    
+    temples.forEach(temple => {
+        const card = document.createElement('div');
+        card.className = 'temple-card';
+        card.innerHTML = `
+            <img src="${temple.images[0]}" class="temple-image" alt="${temple.name}">
+            <div class="temple-info">
+                <h2 class="temple-name">${temple.name}</h2>
+                <p class="temple-deity">Primary Deity: ${temple.deity}</p>
+                <p class="temple-description">${temple.description}</p>
+            </div>
+        `;
+        gallery.appendChild(card);
+    });
+}
+
+// Search functionality
+document.getElementById('searchInput').addEventListener('input', function(e) {
+    const searchTerm = e.target.value.toLowerCase().trim();
+    const cards = document.querySelectorAll('.temple-card');
+    let visibleCount = 0;
+
+    temples.forEach((temple, index) => {
+        const card = cards[index];
+        const match = temple.name.toLowerCase().includes(searchTerm);
+        card.style.display = match ? 'block' : 'none';
+        if(match) visibleCount++;
+    });
+
+    // Show/hide no results message
+    const noResults = document.querySelector('.no-results') || document.createElement('div');
+    if (visibleCount === 0 && searchTerm !== '') {
+        noResults.className = 'no-results';
+        noResults.textContent = 'No temples found matching your search';
+        document.getElementById('templeGallery').appendChild(noResults);
+    } else {
+        if (document.contains(noResults)) noResults.remove();
+    }
+});
+
+// Initialize gallery on load
+window.onload = initGallery;
+</script>
+</body>
+      </html>
